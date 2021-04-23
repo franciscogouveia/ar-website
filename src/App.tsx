@@ -1,26 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {MyARCanvas} from "./components/canvas/CustomARCanvas";
+import { MyScene } from './MyScene';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const sessionInit = {
+        requiredFeatures: ["local-floor", "hit-test"],
+    };
+
+    return (
+      <MyARCanvas sessionInit={sessionInit} >
+        <MyScene />
+      </MyARCanvas>
+    );
 }
 
 export default App;

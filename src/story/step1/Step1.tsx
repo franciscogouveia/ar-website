@@ -1,118 +1,110 @@
-import React, {useMemo, useRef, useState} from "react";
+import React, {Suspense, useEffect, useRef, useState} from "react";
 import {Text} from "@react-three/drei";
-import {useFrame} from "@react-three/fiber";
+import {useFrame, useThree} from "@react-three/fiber";
 import {Interactive} from "@react-three/xr";
-import {Group, Mesh} from "three";
+import {Group} from "three";
+import {WithNextStep} from "../common/StoryInterfaces";
+import {PhoneBasic} from "../../meshes/phone-basic/PhoneBasic";
 
-export interface Step1Handler {
-    next: () => void;
-}
+const bringTo = (current: number, step: number, target: number) => {
+    if (current > target) {
+        return Math.max(current - step, target);
+    } else {
+        return Math.min(current + step, target);
+    }
+};
 
-interface SubStepHandler {
-    next: () => void;
-}
+const bringToZero = (current: number, step: number = 0.01): number => {
+    return bringTo(current, step, 0);
+};
 
-const SubStep1 = (props: JSX.IntrinsicElements['group'] & SubStepHandler) => {
+export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
 
-    const ref = useRef<Group>();
-    const titleRef = useRef<Mesh>();
+    const {clock} = useThree();
+    const phoneMesh = useRef<Group>();
+    clock.start();
+
+    const [animation, setAnimation] = useState<number>(1);
 
     useFrame(() => {
 
-        if (!titleRef.current) {
+        if (!phoneMesh.current) {
             return;
         }
 
-        titleRef.current.rotation.y += Math.PI / 32
+        const mesh: Group = phoneMesh.current;
+        const maxRotation = (Math.PI / 8);
+
+        const rotationSpeed = 2;
+
+        switch (animation) {
+            case 0:
+                mesh.rotation.x = bringToZero(mesh.rotation.x);
+                mesh.rotation.y = bringTo(mesh.rotation.y, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * maxRotation);
+                mesh.rotation.z = bringToZero(mesh.rotation.z);
+                break;
+            case 1:
+                mesh.rotation.x = bringTo(mesh.rotation.x, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * maxRotation);
+                mesh.rotation.y = bringToZero(mesh.rotation.y);
+                mesh.rotation.z = bringToZero(mesh.rotation.z);
+                break;
+            default:
+                mesh.rotation.x = bringToZero(mesh.rotation.x);
+                mesh.rotation.y = bringToZero(mesh.rotation.y);
+                mesh.rotation.z = bringTo(mesh.rotation.z, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * (maxRotation / 2));
+        }
     });
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            clock.stop();
+            setAnimation((animation + 1) % 3);
+            clock.start();
+        }, 3000);
+
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [animation]);
+
     return (
-        <group ref={ref} {...props}>
+        <group {...props}>
+            <Suspense fallback={null}>
+                <PhoneBasic innerRef={phoneMesh} position={[0.015, 0.02, -0.012]} scale={[0.2, 0.2, 0.2]} />
+            </Suspense>
             <Text
-                ref={titleRef}
-                position={[0, 0.005, 0]}
+                position={[-0.013, 0.007, 0]}
                 fontSize={0.01}
                 color={"gray"}
             >
                 Olá!
             </Text>
             <mesh position={[0, -0.006, -0.01]} >
-                <planeGeometry args={[0.03, 0.014]} />
+                <planeGeometry args={[0.05, 0.018]} />
                 <meshStandardMaterial color={"white"} />
                 <Text
-                    fontSize={0.002}
+                    fontSize={0.003}
                     textAlign={"center"}
-                    maxWidth={0.03}
+                    maxWidth={0.04}
                     color={"black"}
                 >
-                    For this to work, you need to move the camera around the room until you see a marker in the center of the screen
+                    For this to work, you need to point the camera around the room until you see a marker on the floor
                 </Text>
             </mesh>
 
             <Interactive onSelect={() => props.next()}>
                 <mesh position={[0, -0.02, -0.01]} >
-                    <planeGeometry args={[0.005, 0.005]} />
+                    <planeGeometry args={[0.015, 0.005]} />
                     <meshStandardMaterial color={"lightgray"} />
                     <Text
                         position={[0, 0, 0]}
                         fontSize={0.002}
                         color={"black"}
                     >
-                        Ok!
+                        Understood!
                     </Text>
                 </mesh>
             </Interactive>
-        </group>
-    );
-};
-
-const SubStep2 = (props: JSX.IntrinsicElements['group'] & SubStepHandler) => {
-
-    const ref = useRef<Group>();
-
-    return (
-        <group ref={ref} {...props}>
-            <mesh position={[0, -0.006, -0.01]} >
-                <planeGeometry args={[0.03, 0.014]} />
-                <meshStandardMaterial color={"white"} />
-                <Text
-                    fontSize={0.002}
-                    textAlign={"center"}
-                    maxWidth={0.03}
-                    color={"black"}
-                >
-                    Great! When you are happy about the position of the marker, click on it
-                </Text>
-            </mesh>
-        </group>
-    );
-};
-
-export const Step1 = (props: JSX.IntrinsicElements['group'] & Step1Handler) => {
-
-    const [step, setStep] = useState<number>(0);
-
-    const child = useMemo(() => {
-        switch (step) {
-            case 0:
-                return (
-                    <SubStep1 next={() => setStep(1)} />
-                );
-            case 1:
-                return (
-                    <SubStep2 next={() => setStep(2)} />
-                );
-            default:
-                return (
-                    <Text fontSize={0.005} color={"red"}>Invalid state :(</Text>
-                );
-        }
-    }, [step]);
-
-
-    return (
-        <group {...props}>
-            {child}
         </group>
     );
 };

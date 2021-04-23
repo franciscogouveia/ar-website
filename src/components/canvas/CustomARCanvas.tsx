@@ -54,22 +54,28 @@ export const MyARCanvas: FunctionComponent<MyARCanvasProps> = (props: PropsWithC
     };
 
     return (
-        <>
-            <Canvas vr onCreated={(rootState: RootState) => setRs(rootState)} style={{height: '720px'}}>
-                {isStarted && (
-                    <XR>
-                        <InteractionManager>
-                            {props.children}
-                        </InteractionManager>
-                    </XR>
-                )}
+        <div style={{textAlign: 'center'}}>
+            <h1>Augmented Reality</h1>
+            <hr />
+
+            <Canvas vr onCreated={(rootState: RootState) => setRs(rootState)} style={{visibility: 'hidden', position: 'fixed'}}>
+                <XR>
+                    <InteractionManager>
+                        {props.children}
+                    </InteractionManager>
+                </XR>
             </Canvas>
+
             {!isStarted && rs && (
-                <button onClick={() => onClickStart(rs)} value="Start">Click here when you are ready!</button>
+                <>
+                    <p>By clicking on the following button, you are allowing this website to access your camera to track the environment around you. This is required for an immersive augmented reality experience.</p>
+                    <p>More information can be found <a href="https://www.w3.org/TR/webxr/#security" rel="noreferrer" target={"_blank"}>here</a>.</p>
+                    <button style={{width: '100px', height: '100px'}} onClick={() => onClickStart(rs)}>Start AR Experience</button>
+                </>
             )}
             {!isStarted && !rs && (
-                <div>Starting XR canvas...</div>
+                <div style={{color: 'white'}}>Initializing XR canvas...</div>
             )}
-        </>
+        </div>
     )
 };

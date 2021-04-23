@@ -27,7 +27,11 @@ export const HitTracker = (props: PropsWithChildren<HitTrackerProps>) => {
             matrix.decompose(ref.current.position, ref.current.quaternion, emptyVector);
 
             // Allow tracking of the coordinates on an upper level
-            props.onLocationChanged(matrix.clone());
+            const {x, y, z} = ref.current.position;
+            if (x || y || z) {
+                // it's very unlikely that the position is exactly 0, 0, 0
+                props.onLocationChanged(matrix.clone());
+            }
         }
     });
 

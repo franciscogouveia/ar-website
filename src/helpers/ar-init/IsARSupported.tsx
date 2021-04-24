@@ -1,4 +1,4 @@
-import {Navigator, WebGLRenderer, XRSessionInit} from "three";
+import {Navigator, WebGLRenderer, XRSession, XRSessionInit} from "three";
 
 const SESSION_TYPE = 'immersive-ar';
 const {xr} = window.navigator as Navigator;
@@ -17,7 +17,7 @@ export const isARSupported = async () => {
     }
 };
 
-export const initAR = async (renderer: WebGLRenderer, sessionInit: XRSessionInit = {}) => {
+export const initAR = async (renderer: WebGLRenderer, sessionInit: XRSessionInit = {}): Promise<XRSession> => {
 
     if (!xr) {
         throw new Error('XR not supported');

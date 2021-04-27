@@ -1,6 +1,7 @@
 {
   "name": "ar-website",
   "description": "Augmented Reality Personal Website",
+  "license": "MIT",
   "keywords": [
     "ar",
     "react",

@@ -36,7 +36,6 @@ function App() {
                 </MyARCanvas>
             )}
             <DomOverlay innerRef={domOverlayRef}
-                        style={{width: '100%', height: '100%'}}
                         visible={!!arSession}
             >
                 <div style={{position: 'absolute', bottom: '0px', left: '0px', right: '0px', backgroundColor: 'white', textAlign: 'center'}}>
@@ -45,7 +44,7 @@ function App() {
                         <hr />
                     </div>
 
-                    <button style={{height: '32px'}} onClick={() => arSession?.end()}>Exit</button>
+                    <button style={{height: '40px'}} onClick={() => arSession?.end()}>End this!</button>
                 </div>
             </DomOverlay>
         </>

@@ -33,14 +33,14 @@ export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
         }
 
         const mesh: Group = phoneMesh.current;
-        const maxRotation = (Math.PI / 8);
+        const maxRotation = (Math.PI / 6);
 
         const rotationSpeed = 2;
 
         switch (animation) {
             case 0:
                 mesh.rotation.x = bringToZero(mesh.rotation.x);
-                mesh.rotation.y = bringTo(mesh.rotation.y, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * maxRotation);
+                mesh.rotation.y = bringTo(mesh.rotation.y, 0.02, Math.cos(clock.elapsedTime * rotationSpeed) * maxRotation * 10);
                 mesh.rotation.z = bringToZero(mesh.rotation.z);
                 break;
             case 1:
@@ -51,7 +51,7 @@ export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
             default:
                 mesh.rotation.x = bringToZero(mesh.rotation.x);
                 mesh.rotation.y = bringToZero(mesh.rotation.y);
-                mesh.rotation.z = bringTo(mesh.rotation.z, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * (maxRotation / 2));
+                mesh.rotation.z = bringTo(mesh.rotation.z, 0.01, Math.cos(clock.elapsedTime * rotationSpeed) * maxRotation);
         }
     });
 
@@ -65,7 +65,7 @@ export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
         return () => {
             clearTimeout(timer);
         }
-    }, [animation]);
+    }, [animation, clock]);
 
     return (
         <group {...props}>
@@ -81,12 +81,12 @@ export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
             </Text>
             <mesh position={[0, -0.006, -0.01]} >
                 <planeGeometry args={[0.05, 0.018]} />
-                <meshStandardMaterial color={"white"} />
+                <meshStandardMaterial color={"black"} />
                 <Text
                     fontSize={0.003}
                     textAlign={"center"}
                     maxWidth={0.04}
-                    color={"black"}
+                    color={"white"}
                 >
                     For this to work, you need to point the camera around the room until you see a marker on the floor
                 </Text>
@@ -94,7 +94,7 @@ export const Step1 = (props: JSX.IntrinsicElements['group'] & WithNextStep) => {
 
             <Interactive onSelect={() => props.next()}>
                 <mesh position={[0, -0.02, -0.01]} >
-                    <planeGeometry args={[0.015, 0.005]} />
+                    <planeGeometry args={[0.015, 0.006]} />
                     <meshStandardMaterial color={"lightgray"} />
                     <Text
                         position={[0, 0, 0]}

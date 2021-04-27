@@ -7,21 +7,20 @@ import {useThree} from "@react-three/fiber";
 import {Step1} from "./story/step1/Step1";
 import {Step2} from "./story/step2/Step2";
 import {CV} from "./meshes/cv/CV";
+import {Step3} from "./story/step3/Step3";
 
 export const MyScene = () => {
     const {camera} = useThree();
     const [step, setStep] = useState<number>(0);
-    const [spot, setSpot] = useState<Matrix4|undefined>();
-    const objectRef = useRef<Group>();
+    const sceneCenterRef = useRef<Group>();
 
     const nextStep = () => {
         setStep(step + 1);
     };
 
-    if (spot && objectRef.current) {
-        const {position, quaternion, scale} = objectRef.current;
-        spot.decompose(position, quaternion, scale);
-    }
+    const onHitTrackerChanged = (location: Matrix4) => {
+        sceneCenterRef.current && location.decompose(sceneCenterRef.current.position, sceneCenterRef.current.quaternion, sceneCenterRef.current.scale);
+    };
 
     return (
         <>
@@ -38,17 +37,20 @@ export const MyScene = () => {
             <FollowCamera>
                 {step === 0 && (<Step1 position={[0, 0, -camera.near - 0.01]} next={nextStep} />)}
                 {step === 1 && (<Step2 position={[0, 0, -camera.near - 0.01]} next={nextStep} />)}
+                {step === 2 && (<Step3 position={[0, 0, -camera.near - 0.01]} next={nextStep} />)}
             </FollowCamera>
 
             {step === 1 && (
-                <HitTracker onLocationChanged={(location) => setSpot(location)}>
+                <HitTracker onLocationChanged={onHitTrackerChanged}>
                     <LoadingMesh />
                 </HitTracker>
             )}
 
-            {step === 2 && (
-                <CV innerRef={objectRef} />
-            )}
+            <group ref={sceneCenterRef}>
+                {step === 2 && (
+                    <CV />
+                )}
+            </group>
         </>
     );
 };

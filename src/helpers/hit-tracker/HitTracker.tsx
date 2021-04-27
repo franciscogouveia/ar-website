@@ -8,7 +8,7 @@ export interface HitTrackerProps {
 }
 
 // We ignore the scale. We don't need to always reuse the same empty vector
-const emptyVector = new THREE.Vector3();
+const dummyVector = new THREE.Vector3();
 
 /**
  * The children will be placed in the hit location with the right rotation.
@@ -24,14 +24,10 @@ export const HitTracker = (props: PropsWithChildren<HitTrackerProps>) => {
 
         if (hit && ref.current) {
             // Place group in real-world location with proper rotation
-            matrix.decompose(ref.current.position, ref.current.quaternion, emptyVector);
+            matrix.decompose(ref.current.position, ref.current.quaternion, dummyVector);
 
-            // Allow tracking of the coordinates on an upper level
-            const {x, y, z} = ref.current.position;
-            if (x || y || z) {
-                // it's very unlikely that the position is exactly 0, 0, 0
-                props.onLocationChanged(matrix.clone());
-            }
+            // Propagate up
+            props.onLocationChanged(matrix.clone());
         }
     });
 

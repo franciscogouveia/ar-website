@@ -1,6 +1,8 @@
 # AR Experiment (https://de-gouveia.eu/ar)
 ---
 
+[![Node.js CI](https://github.com/franciscogouveia/ar-website/actions/workflows/node.js.yml/badge.svg)](https://github.com/franciscogouveia/ar-website/actions/workflows/node.js.yml)
+
 An augmented reality personal website.
 
 This is the result of some learning of 3D modeling, react, three.js and react-three.

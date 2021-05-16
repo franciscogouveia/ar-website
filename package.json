@@ -64,5 +64,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@react-three/test-renderer": "^6.1.1"
+  }
 }

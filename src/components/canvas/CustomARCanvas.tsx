@@ -43,6 +43,10 @@ export const MyARCanvas: FunctionComponent<MyARCanvasProps> = (props: PropsWithC
             };
 
             xrSession.addEventListener('end', onEndedWrapper);
+
+            return () => {
+                xrSession.removeEventListener('end', onEndedWrapper);
+            };
         }
     }, [onEnded, xrSession]);
 

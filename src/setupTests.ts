@@ -8,3 +8,5 @@ function noOp () { }
 if (typeof window.URL.createObjectURL === 'undefined') {
     Object.defineProperty(window.URL, 'createObjectURL', { value: noOp})
 }
+
+jest.mock('scheduler', () => require('scheduler/unstable_mock'));

@@ -1530,6 +1530,11 @@
     utility-types "^3.10.0"
     zustand "^3.5.1"
 
+"@react-three/test-renderer@^6.1.1":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@react-three/test-renderer/-/test-renderer-6.1.1.tgz#a007e0a90b16a4828c2dcddacefd2c39c0e604ea"
+  integrity sha512-a5Nh87lqSED3MLe0D/5ovmtMKDhw5T83mcCHQy47ac95mkN41Z2hF2wBkQ+LzQ0eGjUeUE3Obwgr70txGXF8/A==
+
 "@react-three/xr@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@react-three/xr/-/xr-3.1.1.tgz#4198423ec7bbde78dc1327bf0c1e6ea7f4b221d0"

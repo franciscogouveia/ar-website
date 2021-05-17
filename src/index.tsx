@@ -23,6 +23,7 @@ Welcome!
 You are looking at the code to probably understand some of it.
 Why don't you just drop a comment here and I will try to help you:
 
+https://www.linkedin.com/pulse/creative-adventure-glimpse-future-francisco-de-gouveia
 
 I may do a guide for FAQ.
 
